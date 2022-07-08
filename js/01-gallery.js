@@ -1,13 +1,13 @@
 import { galleryItems } from './gallery-items.js';
 // Change code below this line
 
-console.log(galleryItems);
+// console.log(galleryItems);
 
 // console.log(galleryItems[0].preview);
 // console.log(galleryItems[0].original);
 // console.log(galleryItems[0].description);
-console.log("================================================");
-// event.preventDefault(); //! отменить действие по умолчанию - preventDefault().
+// console.log("================================================");
+
 
 
 //! 1.Получаем ссылку на div-контейнер:
@@ -17,7 +17,7 @@ const ImageContainer = document.querySelector('.gallery');
 //!   2.В переменную ImageMarkup записываем новую разметку 
 //!  как результат вызовыа ф-ции createImageCardsMarkup 
 //!  с аргументом - массив объектов galleryItems):
-const ImageMarkup = createImageCardsMarkup(galleryItems);
+const ImageMarkup = createImageCardsMarkup();
 
 //!   3.Добавляем новую разметку в div-контейнер с помощью insertAdjacentHTML:
 ImageContainer.insertAdjacentHTML('beforeend', ImageMarkup);
@@ -31,24 +31,26 @@ ImageContainer.insertAdjacentHTML('beforeend', ImageMarkup);
 
 
 //!   4.Сосдаем слушателя событий методом делегирования:
+// console.log(ImageContainer.addEventListener('click', onImageContainerClick));
 ImageContainer.addEventListener('click', onImageContainerClick);
+// console.log(onImageContainerClick());
 
 
 //!   1.1.Ф-ция, к-рая создает массив с новой разметкой:
-function createImageCardsMarkup(galleryItems) {
-  return galleryItems
+function createImageCardsMarkup() {
+    return galleryItems
     .map(({ preview, original, description }) => {
-      return `
-    <div class="gallery__item">
-  <a class="gallery__link" href="${original}">
-    <img
-      class="gallery__image"
-      src="${preview}"
-      data-source="${original}"
-      alt="${description}"
-    />
-  </a>
-</div>
+    return `
+        <div class="gallery__item">
+        <a class="gallery__link" href="${original}">
+        <img
+            class="gallery__image"
+            src="${preview}"
+            data-source="${original}"
+            alt="${description}"
+        />
+        </a>
+        </div>
     `;
     })
     .join('');
@@ -56,31 +58,31 @@ function createImageCardsMarkup(galleryItems) {
 
 //!   4.1.Ф-ция, к-рая прослушивает клики от ВСЕХ изображений:
 function onImageContainerClick(evt) {
-    evt.preventDefault(); //? отменить действие по умолчанию - preventDefault().
+    evt.preventDefault(); //TODO отменить действие по умолчанию - preventDefault().
 
-    console.log("++++++++++++++++++++++++++++++++++++++++++++++");
-    console.log(evt.target);
+    // console.log("++++++++++++++++++++++++++++++++++++++++++++++");
+    // console.log(evt.target);
+    // console.log(evt.target.src);
+    // console.log(evt.target.dataset.source); //! ссылка на кликнутое оригинальное изображение
+    // console.log("++++++++++++++++++++++++++++++++++++++++++++++");
 
-    const imageEl = evt.target.src;
-    console.log(imageEl);
-
-    console.log(evt.target.dataset.source);
-    console.log("++++++++++++++++++++++++++++++++++++++++++++++");
     
+    //! 1 - вариант 
+    instance.element().querySelector('img').setAttribute('src', evt.target.dataset.source);
+    instance.show();
 
-    // instance.show()
-    basicLightbox.create(`
-		<img src="${evt.target.dataset.source}">
-	`).show()
 
+    //! 2 - вариант 
+    // basicLightbox.create(`
+	// 	<img src="${evt.target.dataset.source}">
+	// `).show()
 }
 
+//! 1 - вариант 
+const instance = basicLightbox.create(`
+		<img src="">
+	`)
 
 
-// const instance = basicLightbox.create(
-//     `<h1>Dynamic Content</h1>
-// 	<p>You can set the content of the lightbox with JS.</p>`
-// )
 
-// спочатку в інстансі має бути зображення з пустим src
-// і по кліку ми маємо витягувати src з event та вставляти його в інстанс в src який раніше був пустий
+
